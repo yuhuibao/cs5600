@@ -55,7 +55,9 @@ loop:
     lea 0(%rsp),%rsi //read_buf
     syscall
     movl 0(%rsp),%r8d
-    lea 16(%rsp),%rdi
+    /* write to stdout
+    movl 0(%rsp),%r8d
+    lea -10(%rbp),%rdi
     mov $print_fmt,%rsi
     mov $0,%rdx
     movl %r8d,%edx
@@ -68,20 +70,35 @@ loop:
     mov %rax,%rdx
     mov $1,%rax //syscall 1 = write
     syscall
+    */
     inc %rbx
     add $4,%rsp
     jmp loop
 loop_done:
     mov $4,%rax
     imul %r12,%rax
-    add %rax,%rsp
-    /*
-    mov $4,%rdx // buffer size
-    mov $0,%rax //syscall 0 = read
-    */
+    sub %rax,%rsp
 
     mov $3,%rax //syscall 3 = close
     mov %r13,%rdi
+    syscall
+
+    lea 0(%rsp),%rdi
+    mov %r12, %rsi
+    call insertion_sort
+
+    mov %r15,%rdi
+    mov $2,%rsi
+    mov $0644,%rdx
+    mov $2,%rax //syscall 2 = open
+    syscall
+    mov %rax,%r13 //output file fd
+    lea 0(%rsp),%rsi //write_buf
+    mov %r13,%rdi //fd
+    mov $4,%rax
+    imul %r12,%rax
+    mov %rax,%rdx
+    mov $1,%rax //syscall 1 = write
     syscall
 main_done:
     leave
@@ -90,6 +107,43 @@ main_done:
     pop %r13
     pop %r12
     pop %rbx
+    ret
+
+insertion_sort:
+    enter $0,$0
+    // address of array is in %rdi
+    // array length is in %rsi
+    mov $1, %rcx
+    // i is %rcx
+iloop:
+    cmp %rsi, %rcx
+    jge iloop_done
+    movl (%rdi,%rcx,4),%edx
+    // value is %rdx
+    mov %rcx, %rax
+    dec %rax
+    // j is %rax
+while:
+    cmp $0, %rax
+    jl while_done
+    movl (%rdi,%rax,4),%r8d
+    // arr[j] is %r8
+    cmp %r8d,%edx
+    jge while_done
+    mov %rax, %r9
+    inc %r9
+    movl %r8d,(%rdi,%r9,4)
+    // arr[j+1]=arr[j]  
+    dec %rax
+    jmp while
+while_done:
+    inc %rax
+    movl %edx,(%rdi,%rax,4)
+    dec %rax
+    inc %rcx
+    jmp iloop
+iloop_done:
+    leave
     ret
 .globl test_input
     .data
