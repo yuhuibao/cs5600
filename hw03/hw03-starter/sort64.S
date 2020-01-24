@@ -20,8 +20,16 @@ int main(int argc, char* argv[])
 */
     cmp $3,%rdi
     je corr
+    enter $0,$0
     mov $mess, %rdi
-    call printf
+    call strlen
+
+    mov $1, %rdi
+    mov $mess, %rsi
+    mov %rax,%rdx
+    mov $1, %rax
+    syscall
+
     jmp main_done
 corr:
     mov 8(%rsi),%r14 //input file
@@ -147,7 +155,7 @@ iloop_done:
     ret
 .globl test_input
     .data
-mess:  .string "Usage: ./sort input output"
+mess:  .string "Usage: ./sort input output\n"
 print_fmt: .string "%d\n"
     lea 0(%rsp),%rsi //read_buf
 
