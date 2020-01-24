@@ -8,7 +8,7 @@ sort: sort.c
 	gcc -g -o sort sort.c
 
 sort64: sort64.S
-	gcc -g -no-pie -o sort64 sort64.S
+	gcc -g -no-pie -o sort64 sort64.S testSize.c
 
 sort32: sort32.S
 	gcc -g -m32 -o sort32 sort32.S
