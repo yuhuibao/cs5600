@@ -41,7 +41,7 @@ int
 main(int argc, char* argv[])
 {
     if (argc != 3){
-    char* usage = "Usage: ./sort input-file output-file";
+    char* usage = "Usage: ./sort input output\n";
     int rv = write(2, usage, length(usage));
     if (rv < 0) {
         // Checking your syscall return values is a
@@ -62,7 +62,7 @@ main(int argc, char* argv[])
         perror("stat in main");
         _exit(1);
     }
-    printf("size of the file:%ld\n",info.st_size);
+    //printf("size of the file:%ld\n",info.st_size);
 
     int len = info.st_size / 4;
     int array[len];
@@ -76,8 +76,8 @@ main(int argc, char* argv[])
     for(int i = 0;i <len ; i++){
         read(fd_i,&array[i],4);
         //printf("%d\n",array[i]);
-        sprintf(write_buf,"%d\n",array[i]);
-        write(1,write_buf,length(write_buf));
+        //sprintf(write_buf,"%d\n",array[i]);
+        //write(1,write_buf,length(write_buf));
     }
     insersion_sort(array,len); 
     for(int i = 0; i< len; i++){
