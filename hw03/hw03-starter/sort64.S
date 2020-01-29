@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     mov %rax,%rdx
     mov $1, %rax
     syscall
-
+    mov $1, %rax
     jmp main_done
 corr:
     mov 8(%rsi),%r14 //input file
@@ -96,7 +96,8 @@ loop_done:
     call insertion_sort
 
     mov %r15,%rdi
-    mov $2,%rsi
+    mov $02,%rsi
+    or $0100,%rsi
     mov $0644,%rdx
     mov $2,%rax //syscall 2 = open
     syscall
@@ -108,6 +109,7 @@ loop_done:
     mov %rax,%rdx
     mov $1,%rax //syscall 1 = write
     syscall
+    mov $0, %rax
 main_done:
     leave
     pop %r15
