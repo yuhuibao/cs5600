@@ -11,7 +11,7 @@ sort64: sort64.S
 	gcc -g -no-pie -o sort64 sort64.S testSize.c
 
 sort32: sort32.S
-	gcc -g -m32 -o sort32 sort32.S
+	gcc -g -m32 -o sort32 sort32.S testSize.c
 
 check_stat: check_stat.c
 	gcc -g -o check_stat check_stat.c
